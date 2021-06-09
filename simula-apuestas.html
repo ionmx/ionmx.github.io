@@ -16,7 +16,7 @@
         <td>
           <strong>Monto</strong>:<br>
           <div class="input-group mb-3">
-            <span class="input-group-text" id="basic-addon1">$</span>
+            <span class="input-group-text">$</span>
             <input type="number" value="1000" class="form-control" id="monto" placeholder="">
           </div>
         </td>
@@ -24,7 +24,7 @@
         <td>
           <strong>Apuestas</strong>:<br>
           <div class="input-group mb-3">
-            <span class="input-group-text" id="basic-addon1">#</span>
+            <span class="input-group-text">#</span>
             <input type="number" value="20" class="form-control" id="apuestas" placeholder="">
           </div>
         </td>
@@ -32,7 +32,7 @@
         <td>
           <strong>Pasadas</strong>:<br>
           <div class="input-group mb-3">
-            <span class="input-group-text" id="basic-addon1">#</span>
+            <span class="input-group-text">#</span>
             <input type="number" value="10" class="form-control" id="pasadas" placeholder="">
           </div>
         </td>
@@ -40,7 +40,7 @@
         <td>
           <strong>Momio Bajo</strong>:<br>
           <div class="input-group mb-3">
-            <span class="input-group-text" id="basic-addon1">m</span>
+            <span class="input-group-text">m</span>
             <input type="number" value="-600" class="form-control" id="momio_bajo" placeholder="">
           </div>
         </td>
@@ -48,7 +48,7 @@
         <td>
           <strong>Momio Alto</strong>:<br>
           <div class="input-group mb-3">
-            <span class="input-group-text" id="basic-addon1">M.</span>
+            <span class="input-group-text">M.</span>
             <input type="number" value="-300" class="form-control" id="momio_alto" placeholder="">
           </div>
         </td>
@@ -56,9 +56,13 @@
         <td>
           <strong>Var. momio</strong>:<br>
           <div class="input-group mb-3">
-            <span class="input-group-text" id="basic-addon1">S</span>
+            <span class="input-group-text">S</span>
             <input type="number" value="50" class="form-control" id="step" placeholder="">
           </div>
+        </td>
+      </tr><tr>
+        <td>
+          <input type="checkbox" value="true" id="reinvierte" checked="checked"> <strong>Reinvierte</strong>
         </td>
       </tr><tr>
         <td>
@@ -85,6 +89,10 @@
       var momio_bajo   = $("#momio_bajo").val();
       var momio_alto   = $("#momio_alto").val();
       var step         = $("#step").val();
+      var reinvierte   = false;
+      if( $('#reinvierte').prop('checked') ) {
+        reinvierte = true;
+      }
 
       var step_n = Math.abs(Math.floor((Math.abs(momio_bajo) - Math.abs(momio_alto)) / step));
 
@@ -92,12 +100,17 @@
       
       var genera = 0;
       var total_pasadas = 0;
+      token = Math.floor(monto / apuestas);
 
       for (var p = 1; p <= pasadas; p++) {
         if (monto <= 0) break;
         total_pasadas += 1;
         tabla[p] = {};
-        token = Math.floor(monto / apuestas);
+        
+        if (reinvierte || monto < tabla[1].monto_inicial) {
+          token = Math.floor(monto / apuestas);  
+        }
+
         tabla[p].monto_inicial = monto;
         monto = 0;
         tabla[p].monto_final = monto;
