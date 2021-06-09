@@ -172,6 +172,9 @@ function drawBasic() {
       data.addColumn('number', 'X');
       data.addColumn('number', 'Monto');
       for (var i = 1; i < tabla.length; i++) {
+        if (tabla[i].monto_final <= 0) {
+          break;
+        }
         data.addRows([ 
           [i, tabla[i].monto_final]
         ]);
