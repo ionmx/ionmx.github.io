@@ -171,6 +171,9 @@ function drawBasic() {
       var data = new google.visualization.DataTable();
       data.addColumn('number', 'X');
       data.addColumn('number', 'Monto');
+      data.addRows([ 
+          [0, parseFloat($("#monto").val())]
+        ]);
       for (var i = 1; i < tabla.length; i++) {
         if (tabla[i].monto_final <= 0) {
           break;
