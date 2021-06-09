@@ -33,7 +33,7 @@
           <strong>Pasadas</strong>:<br>
           <div class="input-group mb-3">
             <span class="input-group-text" id="basic-addon1">#</span>
-            <input type="number" value="1" class="form-control" id="pasadas" placeholder="">
+            <input type="number" value="10" class="form-control" id="pasadas" placeholder="">
           </div>
         </td>
       </tr><tr>
@@ -66,11 +66,16 @@
         </td>
       </tr>
     </table>
+    <div id="chart_div"></div>
     <div id="resultado"></div>
   </div>
 
   <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  
   <script>
+    var tabla = [];
+    google.charts.load('current', {packages: ['corechart', 'line']});
     $("#generar").on("click", function() {
       $("#resultado").html("Generando...");
 
@@ -84,7 +89,7 @@
       var step_n = Math.abs(Math.floor((Math.abs(momio_bajo) - Math.abs(momio_alto)) / step));
 
 
-      var tabla = [];
+      
       var genera = 0;
       var total_pasadas = 0;
 
@@ -155,8 +160,37 @@
 
       
       $("#resultado").html(res);
-
+      google.charts.setOnLoadCallback(drawBasic);
     });
+
+
+
+
+function drawBasic() {
+
+      var data = new google.visualization.DataTable();
+      data.addColumn('number', 'X');
+      data.addColumn('number', 'Monto');
+      for (var i = 1; i < tabla.length; i++) {
+        data.addRows([ 
+          [i, tabla[i].monto_final]
+        ]);
+      }
+
+
+      var options = {
+        hAxis: {
+          title: 'Pasada'
+        },
+        vAxis: {
+          title: 'Monto'
+        }
+      };
+
+      var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+
+      chart.draw(data, options);
+    }
   </script>
 </body>
 </html>
