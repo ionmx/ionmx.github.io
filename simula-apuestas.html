@@ -106,7 +106,12 @@
           genera =  ((100 / renglon.momio) * -token) + token;
           renglon.genera = Math.round((genera + Number.EPSILON) * 100) / 100;
 
-          renglon.probabilidad = Math.abs(renglon.momio) / (Math.abs(renglon.momio) + 100);
+          if (renglon.momio <= 0) {
+            renglon.probabilidad = Math.abs(renglon.momio) / (Math.abs(renglon.momio) + 100);  
+          } else {
+            renglon.probabilidad = 100 / (Math.abs(renglon.momio) + 100);
+          }
+          
           
            
           if (Math.random() <= (renglon.probabilidad) ) {
