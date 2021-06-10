@@ -33,7 +33,7 @@
           <strong>Pasadas</strong>:<br>
           <div class="input-group mb-3">
             <span class="input-group-text">#</span>
-            <input type="number" value="10" class="form-control" id="pasadas" placeholder="">
+            <input type="number" value="1" class="form-control" id="pasadas" placeholder="">
           </div>
         </td>
       </tr><tr>
@@ -41,7 +41,7 @@
           <strong>Momio Bajo</strong>:<br>
           <div class="input-group mb-3">
             <span class="input-group-text">m</span>
-            <input type="number" value="-600" class="form-control" id="momio_bajo" placeholder="">
+            <input type="number" value="-200" class="form-control" id="momio_bajo" placeholder="">
           </div>
         </td>
       </tr><tr>
@@ -49,7 +49,7 @@
           <strong>Momio Alto</strong>:<br>
           <div class="input-group mb-3">
             <span class="input-group-text">M.</span>
-            <input type="number" value="-300" class="form-control" id="momio_alto" placeholder="">
+            <input type="number" value="-100" class="form-control" id="momio_alto" placeholder="">
           </div>
         </td>
       </tr><tr>
@@ -57,7 +57,7 @@
           <strong>Var. momio</strong>:<br>
           <div class="input-group mb-3">
             <span class="input-group-text">S</span>
-            <input type="number" value="50" class="form-control" id="step" placeholder="">
+            <input type="number" value="20" class="form-control" id="step" placeholder="">
           </div>
         </td>
       </tr><tr>
@@ -80,6 +80,10 @@
   <script>
     var tabla = [];
     google.charts.load('current', {packages: ['corechart', 'line']});
+
+    function redondea(val) {
+      return Math.round((parseFloat(val) + Number.EPSILON) * 100) / 100
+    }
     $("#generar").on("click", function() {
       $("#resultado").html("Generando...");
 
@@ -101,6 +105,7 @@
       var genera = 0;
       var total_pasadas = 0;
       token = Math.floor(monto / apuestas);
+      var token_inicial = token
 
       for (var p = 1; p <= pasadas; p++) {
         if (monto <= 0) break;
@@ -109,6 +114,10 @@
         
         if (reinvierte || monto < tabla[1].monto_inicial) {
           token = Math.floor(monto / apuestas);  
+        } else {
+          if (monto >= tabla[1].monto_inicial) {
+            token = token_inicial
+          }
         }
 
         tabla[p].monto_inicial = monto;
@@ -150,7 +159,9 @@
         }
       }
 
-      var res = '<h1>Resultado $' + Math.round((monto + Number.EPSILON) * 100) / 100  + ' ('+ total_pasadas + ' pasadas)</h1>';
+      var total = Math.round((monto + Number.EPSILON) * 100) / 100;
+      var porcentaje = total * 100 / parseFloat($("#monto").val()) - 100;
+      var res = '<h1>Resultado $' +  total  + ' ('+ total_pasadas + ' pasadas, Porcentaje Ganancia: ' + redondea(porcentaje) + '%)</h1>';
 
       var inicial = 0;
       for (var p = 1; p <= total_pasadas; p++) {
